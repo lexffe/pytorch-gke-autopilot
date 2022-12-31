@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ml-job
+spec:
+  template:
+    metadata:
+      name: ml-job
+    spec:
+      serviceAccountName: compute-ksa
+      restartPolicy: Never
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+      initContainers:
+        # Copy the machine learning network and script into local
+        - name: data-copier
+          image: gcr.io/google.com/cloudsdktool/google-cloud-cli:alpine
+          command: ['sh', '-c', '/script/copy-to-local.sh']
+          resources:
+            requests:
+              cpu: "0.25"
+              memory: "1Gi"
+          volumeMounts:
+            - mountPath: /scripts
+              name: scripts
+            - mountPath: /data
+              name: data
+      containers:
+        - name: trainer
+          image: gcr.io/deeplearning-platform-release/pytorch-gpu
+          command: ['sh', '-c', '/script/start-training.sh']
+          volumeMounts:
+          - name: data
+            mountPath: /data
+          - name: scripts
+            mountPath: /scripts
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: "4Gi"
+
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: scripts

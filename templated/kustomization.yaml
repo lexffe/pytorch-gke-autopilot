@@ -1,0 +1,9 @@
+resources:
+  - job.yaml
+  - service-account.yaml
+configMapGenerator:
+  - name: scripts
+    files:
+    - copy-to-local.sh
+    - gscopy.py
+    - start-training.sh
