@@ -15,7 +15,7 @@ spec:
         # Copy the machine learning network and script into local
         - name: data-copier
           image: gcr.io/google.com/cloudsdktool/google-cloud-cli:alpine
-          command: ['sh', '-c', '/script/copy-to-local.sh']
+          command: ['sh', '-c', '/scripts/copy-to-local.sh']
           resources:
             requests:
               cpu: "0.25"
@@ -28,7 +28,7 @@ spec:
       containers:
         - name: trainer
           image: gcr.io/deeplearning-platform-release/pytorch-gpu
-          command: ['sh', '-c', '/script/start-training.sh']
+          command: ['sh', '-c', '/scripts/start-training.sh']
           volumeMounts:
           - name: data
             mountPath: /data
