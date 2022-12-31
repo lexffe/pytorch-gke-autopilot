@@ -6,7 +6,9 @@ from google.cloud import storage
 client = storage.Client()
 bucket = client.bucket("BUCKET_NAME")
 
-for filename in os.listdir('/data/repo/weights'):
-  blob = bucket.blob(f"/data/repo/weights/{filename}")
-  blob.upload_from_filename(filename)
+directory = '/Users/asm/repos/pytorch-gke-autopilot/templated'
+
+for filename in os.listdir(directory):
+  blob = bucket.blob(f"weights/{filename}")
+  blob.upload_from_filename(f"{directory}/{filename}")
 

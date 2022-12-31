@@ -1,5 +1,7 @@
 #!/bin/sh
 
-python3 /data/repo/src/loop.py
+mkdir -p /data/repo/weights
 
-python3 /scripts/gscopy.py
+cd /data/repo/src/
+
+python3 /data/repo/src/loop.py && python3 /scripts/gscopy.py
